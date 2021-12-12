@@ -24,7 +24,7 @@ def generate_bg(size: Vector2) -> Surface:
 
 def main():
     pygame.init()
-    pygame.display.set_caption('Physics Concepts')
+    pygame.display.set_caption('Celestial Orbits')
     screen_size = Vector2(640, 640)
     screen = pygame.display.set_mode(screen_size, pygame.NOFRAME)
 
