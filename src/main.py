@@ -27,8 +27,8 @@ def main():
     screen = pygame.display.set_mode((640, 480))
 
     game_objects = set([
-        CelestialObject(10, Vector2(20, 30), Vector2(0, 0), 10, Color(255, 255, 255)),
-        CelestialObject(10, Vector2(200, 300), Vector2(0, 0), 10, Color(255, 255, 255)),
+        CelestialObject(10000000000000000, Vector2(200 + 150, 300 + 150), Vector2(28, -28), 10, Color(255, 255, 255)),
+        CelestialObject(10000000000000000, Vector2(200, 300), Vector2(-28, 28), 10, Color(255, 255, 255)),
     ])
 
     running = True
