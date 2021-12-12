@@ -1,2 +1,4 @@
-BACKGROUND = 6, 0, 18
-STAR = 255, 255, 255
+from pygame import Color
+
+BACKGROUND = Color(6, 0, 18)
+STAR = Color(255, 255, 255)
