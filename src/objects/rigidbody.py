@@ -11,7 +11,9 @@ class RigidBody(GameObject):
         self.acceleration = Vector2(0, 0)
 
     def pre_update(self, dt, *others) -> None:
-        pass
+        for other in others:
+            if isinstance(other, RigidBody):
+                print('asd')
 
     def update(self, dt, *others) -> None:
         pass

@@ -1,5 +1,6 @@
 import color
 import random
+import time
 
 import pygame
 from pygame import Color, Vector2
@@ -25,12 +26,18 @@ def main():
     pygame.display.set_caption('Physics Concepts')
     screen = pygame.display.set_mode((640, 480))
 
-    game_objects = [
-        CelestialObject(10, Vector2(0, 0), Vector2(0, 0), 10, Color(255, 255, 255))
-    ]
+    game_objects = set([
+        CelestialObject(10, Vector2(20, 30), Vector2(0, 0), 10, Color(255, 255, 255)),
+        CelestialObject(10, Vector2(200, 300), Vector2(0, 0), 10, Color(255, 255, 255)),
+    ])
 
     running = True
+    prev_time = time.perf_counter()
     while running:
+        curr_time = time.perf_counter()
+        delta_time = curr_time - prev_time
+        prev_time = curr_time
+
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
@@ -39,9 +46,11 @@ def main():
         screen.blit(bg, (0, 0))
 
         for obj in game_objects:
-            obj.pre_update(0)  # TODO: add better deltatime
+            others = game_objects - set([obj])
+            obj.pre_update(delta_time, *others)
         for obj in game_objects:
-            obj.update(0)  # TODO: add better deltatime
+            others = game_objects - set([obj])
+            obj.update(delta_time, *others)
             obj.draw(screen)
 
         pygame.display.flip()
