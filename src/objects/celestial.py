@@ -1,5 +1,5 @@
 import pygame
-from pygame import Color, Vector2
+from pygame import Color, Vector2, gfxdraw
 
 from .rigidbody import RigidBody
 from constants import METERS_PER_PIXEL
@@ -12,4 +12,17 @@ class CelestialObject(RigidBody):
         self.color = color
 
     def draw(self, screen) -> None:
-        pygame.draw.circle(screen, self.color, self.position / METERS_PER_PIXEL, self.radius / METERS_PER_PIXEL)
+        gfxdraw.aacircle(
+            screen, 
+            int(self.position.x / METERS_PER_PIXEL),
+            int(self.position.y / METERS_PER_PIXEL),
+            int(self.radius / METERS_PER_PIXEL),
+            self.color
+        )
+        gfxdraw.filled_circle(
+            screen, 
+            int(self.position.x / METERS_PER_PIXEL),
+            int(self.position.y / METERS_PER_PIXEL),
+            int(self.radius / METERS_PER_PIXEL),
+            self.color
+        )
