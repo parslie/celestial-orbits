@@ -67,6 +67,11 @@ def init_celestial_bodies() -> set:
     return bodies
 
 
+def get_mouse_pos() -> Vector2:
+    mouse_pos = pygame.mouse.get_pos()
+    return Vector2(mouse_pos[0], mouse_pos[1]) * METERS_PER_PIXEL
+
+
 def main():
     pygame.init()
     pygame.display.set_caption('Celestial Orbits')
@@ -74,14 +79,32 @@ def main():
 
     game_objects = init_celestial_bodies()
 
+    is_creating_body = False
+    new_body_position = Vector2()
+    new_body_velocity = Vector2()
+
     clock = pygame.time.Clock()
     running = True
     while running:
         delta_time = 60 * 60 * 24  # Every frame simulates a day
+        fps = 60
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
+            elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+                is_creating_body = True
+                new_body_position = get_mouse_pos()
+            elif event.type == pygame.MOUSEBUTTONUP and event.button == 1:
+                is_creating_body = False
+                new_body_velocity = (get_mouse_pos() - new_body_position) / (delta_time * fps)
+                game_objects.add(CelestialObject(
+                    EARTH_MASS,
+                    new_body_position,
+                    new_body_velocity,
+                    EARTH_RADIUS,
+                    EARTH_COLOR
+                ))
 
         screen.blit(generate_bg(SCREEN_SIZE), Vector2())
 
@@ -94,7 +117,7 @@ def main():
             obj.draw(screen)
     
         pygame.display.flip()
-        clock.tick(60)  # Every second simulates 60 days
+        clock.tick(fps)
 
 
 if __name__ == '__main__':
