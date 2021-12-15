@@ -1,8 +1,7 @@
 from pygame import Color, Vector2
 
 from .gameobject import GameObject
-
-GRAV_CONSTANT = 6.674 * (10 ** -11)
+from constants import GRAV_CONSTANT
 
 
 class RigidBody(GameObject):

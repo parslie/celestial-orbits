@@ -2,6 +2,7 @@ import pygame
 from pygame import Color, Vector2
 
 from .rigidbody import RigidBody
+from constants import METERS_PER_PIXEL
 
 
 class CelestialObject(RigidBody):
@@ -11,4 +12,4 @@ class CelestialObject(RigidBody):
         self.color = color
 
     def draw(self, screen) -> None:
-        pygame.draw.circle(screen, self.color, self.position, self.radius)
+        pygame.draw.circle(screen, self.color, self.position / METERS_PER_PIXEL, self.radius / METERS_PER_PIXEL)

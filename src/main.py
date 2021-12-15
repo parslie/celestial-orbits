@@ -1,12 +1,11 @@
 import random
-import time
 import math
 
 import pygame
 from pygame import Surface, Vector2, Color
 
 from objects.celestial import CelestialObject
-from objects.rigidbody import GRAV_CONSTANT
+from constants import *
 
 
 def generate_bg(size: Vector2) -> Surface:
@@ -17,81 +16,74 @@ def generate_bg(size: Vector2) -> Surface:
     for i in range(420):
         x = round(random.random() * size.x)
         y = round(random.random() * size.y)
-        bg.set_at((x, y), Color(255, 255, 255))
+        bg.set_at((x, y), Color(128, 128, 138))
 
     return bg
+
+
+def init_celestial_bodies() -> set:
+    bodies = set()
+
+    bodies.add(CelestialObject(
+        SUN_MASS,
+        SUN_POSITION,
+        SUN_VELOCITY,
+        SUN_RADIUS,
+        SUN_COLOR
+    ))
+
+    bodies.add(CelestialObject(
+        MERCURY_MASS,
+        MERCURY_POSITION,
+        MERCURY_VELOCITY,
+        MERCURY_RADIUS,
+        MERCURY_COLOR
+    ))
+
+    bodies.add(CelestialObject(
+        VENUS_MASS,
+        VENUS_POSITION,
+        VENUS_VELOCITY,
+        VENUS_RADIUS,
+        VENUS_COLOR
+    ))
+
+    bodies.add(CelestialObject(
+        EARTH_MASS,
+        EARTH_POSITION,
+        EARTH_VELOCITY,
+        EARTH_RADIUS,
+        EARTH_COLOR
+    ))
+
+    bodies.add(CelestialObject(
+        MARS_MASS,
+        MARS_POSITION,
+        MARS_VELOCITY,
+        MARS_RADIUS,
+        MARS_COLOR
+    ))
+
+    return bodies
 
 
 def main():
     pygame.init()
     pygame.display.set_caption('Celestial Orbits')
-    screen_size = Vector2(640, 640)
-    screen = pygame.display.set_mode(screen_size, pygame.NOFRAME)
+    screen = pygame.display.set_mode(SCREEN_SIZE)
 
-    game_objects = set()
+    game_objects = init_celestial_bodies()
 
-    sun_mass = 1.989 * 10 ** 30
-    game_objects.add(CelestialObject(
-        sun_mass,
-        screen_size / 2,
-        Vector2(),
-        16,
-        Color(255, 255, 0)
-    ))
-
-    earth_dist = 200
-    earth_speed = math.sqrt(GRAV_CONSTANT * sun_mass / earth_dist)
-    game_objects.add(CelestialObject(
-        5.972 * 10 ** 24,
-        screen_size / 2 + Vector2(earth_dist, 0),
-        Vector2(0, earth_speed),
-        6.5,
-        Color(0, 0, 255)
-    ))
-
-    venus_dist = earth_dist * (107.92 / 147.28)
-    venus_speed = math.sqrt(GRAV_CONSTANT * sun_mass / venus_dist)
-    game_objects.add(CelestialObject(
-        4.867 * 10 ** 24,
-        screen_size / 2 + Vector2(venus_dist, 0),
-        Vector2(0, venus_speed),
-        6,
-        Color(255, 148, 0)
-    ))
-
-    mercury_dist = earth_dist * (57.91 / 147.28)
-    mercury_speed = math.sqrt(GRAV_CONSTANT * sun_mass / mercury_dist)
-    game_objects.add(CelestialObject(
-        3.285 * 10 ** 23,
-        screen_size / 2 + Vector2(mercury_dist, 0),
-        Vector2(0, mercury_speed),
-        2.5,
-        Color(164, 164, 164)
-    ))
-
-    mars_dist = earth_dist * (227.9 / 147.28)
-    mars_speed = math.sqrt(GRAV_CONSTANT * sun_mass / mars_dist)
-    game_objects.add(CelestialObject(
-        6.39 * 10 ** 23,
-        screen_size / 2 + Vector2(mars_dist, 0),
-        Vector2(0, mars_speed),
-        3.5,
-        Color(255, 64, 0)
-    ))
-
+    clock = pygame.time.Clock()
     running = True
-    prev_time = time.perf_counter()
     while running:
-        curr_time = time.perf_counter()
-        delta_time = (curr_time - prev_time) / 4000000  # Slow down time significantly to be able to see orbit
-        prev_time = curr_time
+        delta_time = 60 * 60 * 24  # Every frame simulates a day
 
         for event in pygame.event.get():
-            if event.type == pygame.QUIT or event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
+            if event.type == pygame.QUIT:
                 running = False
 
-        bg = generate_bg(screen_size)
-        screen.blit(bg, Vector2())
+        screen.blit(generate_bg(SCREEN_SIZE), Vector2())
 
         for obj in game_objects:
             others = game_objects - set([obj])
@@ -100,8 +92,9 @@ def main():
             others = game_objects - set([obj])
             obj.update(delta_time, *others)
             obj.draw(screen)
-
+    
         pygame.display.flip()
+        clock.tick(60)  # Every second simulates 60 days
 
 
 if __name__ == '__main__':
