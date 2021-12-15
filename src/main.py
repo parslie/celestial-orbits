@@ -78,6 +78,7 @@ def main():
     screen = pygame.display.set_mode(SCREEN_SIZE)
 
     game_objects = init_celestial_bodies()
+    game_object_bin = set()
 
     is_creating_body = False
     new_body_position = Vector2()
@@ -107,15 +108,21 @@ def main():
                 ))
 
         screen.blit(generate_bg(SCREEN_SIZE), Vector2())
-
+        
         for obj in game_objects:
             others = game_objects - set([obj])
             obj.pre_update(delta_time, *others)
         for obj in game_objects:
             others = game_objects - set([obj])
             obj.update(delta_time, *others)
-            obj.draw(screen)
+            try:
+                obj.draw(screen)
+            except OverflowError:
+                game_object_bin.add(obj)
     
+        game_objects -= game_object_bin
+        game_object_bin.clear()
+
         pygame.display.flip()
         clock.tick(fps)
 
